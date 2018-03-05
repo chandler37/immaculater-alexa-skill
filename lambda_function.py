@@ -56,8 +56,8 @@ def get_welcome_response():
     session_attributes = {}
     card_title = "Welcome"
     speech_output = "Welcome to Immaculater thirty seven. " \
-                    "Please tell me what should be added to your to-do list by saying, " \
-                    "remember to buy soymilk"
+                    "Please tell me what should be added to your to do list by saying, " \
+                    "remember to buy soymilk. Ask me what's on my to do list."
     # If the user either does not reply to the welcome message or says something
     # that is not understood, they will be prompted again with this text.
     reprompt_text = "Please tell me what thought to capture by saying, " \
