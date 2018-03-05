@@ -57,11 +57,10 @@ def get_welcome_response():
     card_title = "Welcome"
     speech_output = "Welcome to Immaculater thirty seven. " \
                     "Please tell me what should be added to your to do list by saying, " \
-                    "remember to buy soymilk. Ask me what's on my to do list."
+                    "remember to buy almond milk. Or ask me what's on my to do list."
     # If the user either does not reply to the welcome message or says something
     # that is not understood, they will be prompted again with this text.
-    reprompt_text = "Please tell me what thought to capture by saying, " \
-                    "remind me to buy soymilk."
+    reprompt_text = "Say remind me to buy almond milk or say what's on my to do list."
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session=False))
 
