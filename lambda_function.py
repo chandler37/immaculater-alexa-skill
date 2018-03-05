@@ -126,6 +126,20 @@ def cmd_do_intent(intent, session, do_or_maybe):
         card_title, speech_output, reprompt_text, should_end_session))
 
 
+def cmd_todo_intent(intent, session, do_or_maybe):
+    """Immaculater's CLI's "todo" command for listing incomplete, active to-dos."""
+
+    card_title = "What's on the list"
+    session_attributes = {}
+    should_end_session = True
+
+    speech_output = "We are so not there yet."
+    reprompt_text = "TOOD(chandler37): Do we need this one?"
+
+    return build_response(session_attributes, build_speechlet_response(
+        card_title, speech_output, reprompt_text, should_end_session))
+
+
 def get_color_from_session(intent, session):
     session_attributes = {}
     reprompt_text = None
@@ -181,6 +195,8 @@ def on_intent(intent_request, session):
         return set_color_in_session(intent, session)
     elif intent_name == "CmdDoIntent":
         return cmd_do_intent(intent, session, "do")
+    elif intent_name == "CmdTodoIntent":
+        return cmd_todo_intent(intent, session)
     elif intent_name == "CmdMaybeIntent":
         return cmd_do_intent(intent, session, "maybe")
     elif intent_name == "WhatsMyColorIntent":
