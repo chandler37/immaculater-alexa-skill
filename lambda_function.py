@@ -1,4 +1,10 @@
 """
+Amazon Alexa integration with Immaculater, a free, open-source to-do list.
+
+TODO(chandler37): Remove all vestiges of the starting blueprint.
+
+--
+
 This sample demonstrates a simple skill built with the Amazon Alexa Skills Kit.
 The Intent Schema, Custom Slots, and Sample Utterances for this skill, as well
 as testing instructions are located at http://amzn.to/1LzFrj6
@@ -10,7 +16,8 @@ http://amzn.to/1LGWsLG
 from __future__ import print_function
 
 
-# --------------- Helpers that build all of the responses ----------------------
+import requests
+
 
 def build_speechlet_response(title, output, reprompt_text, should_end_session):
     return {
@@ -41,8 +48,6 @@ def build_response(session_attributes, speechlet_response):
     }
 
 
-# --------------- Functions that control the skill's behavior ------------------
-
 def get_welcome_response():
     """ If we wanted to initialize the session to have some attributes we could
     add those here
@@ -50,26 +55,24 @@ def get_welcome_response():
 
     session_attributes = {}
     card_title = "Welcome"
-    speech_output = "Welcome to the Alexa Skills Kit sample. " \
-                    "Please tell me your favorite color by saying, " \
-                    "my favorite color is red"
+    speech_output = "Welcome to Immaculater thirty seven. " \
+                    "Please tell me what should be added to your to-do list by saying, " \
+                    "remember to buy soymilk"
     # If the user either does not reply to the welcome message or says something
     # that is not understood, they will be prompted again with this text.
-    reprompt_text = "Please tell me your favorite color by saying, " \
-                    "my favorite color is red."
-    should_end_session = False
+    reprompt_text = "Please tell me what thought to capture by saying, " \
+                    "remind me to buy soymilk."
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, reprompt_text, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session=False))
 
 
 def handle_session_end_request():
     card_title = "Session Ended"
-    speech_output = "Thank you for trying the Alexa Skills Kit sample. " \
-                    "Have a nice day! "
-    # Setting this to true ends the session and exits the skill.
-    should_end_session = True
+    # TODO(chandler37): Hook it up:
+    speech_output = "Thank you for trying Immaculater thirty seven. " \
+                    "I forgot to tell you one thing. This is a prototype that forgot to capture your thoughts. This is not actually hooked up to Immaculater yet."
     return build_response({}, build_speechlet_response(
-        card_title, speech_output, None, should_end_session))
+        card_title, speech_output, None, True))
 
 
 def create_favorite_color_attributes(favorite_color):
@@ -100,6 +103,24 @@ def set_color_in_session(intent, session):
         reprompt_text = "I'm not sure what your favorite color is. " \
                         "You can tell me your favorite color by saying, " \
                         "my favorite color is red."
+    return build_response(session_attributes, build_speechlet_response(
+        card_title, speech_output, reprompt_text, should_end_session))
+
+
+def cmd_do_intent(intent, session, do_or_maybe):
+    """Immaculater's CLI's "do"/"maybe" commands for quick capture."""
+
+    card_title = "Captured"
+    session_attributes = {}
+    should_end_session = True
+
+    if 'action' in intent['slots']:
+        thought = intent['slots']['action']['value']
+        speech_output = "I captured your thought " + thought + (" on your someday maybe list" if do_or_maybe == "maybe" else "")
+        reprompt_text = "TODO(chandler37): do we need this?"
+    else:
+        speech_output = "I'm not sure what you want me to remember."
+        reprompt_text = "I'm not sure what you want me to remember. TOOD(chandler37): Do we need this?"
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
 
@@ -157,6 +178,10 @@ def on_intent(intent_request, session):
     # Dispatch to your skill's intent handlers
     if intent_name == "MyColorIsIntent":
         return set_color_in_session(intent, session)
+    elif intent_name == "CmdDoIntent":
+        return cmd_do_intent(intent, session, "do")
+    elif intent_name == "CmdMaybeIntent":
+        return cmd_do_intent(intent, session, "maybe")
     elif intent_name == "WhatsMyColorIntent":
         return get_color_from_session(intent, session)
     elif intent_name == "AMAZON.HelpIntent":
@@ -177,8 +202,6 @@ def on_session_ended(session_ended_request, session):
     # add cleanup logic here
 
 
-# --------------- Main handler ------------------
-
 def lambda_handler(event, context):
     """ Route the incoming request based on type (LaunchRequest, IntentRequest,
     etc.) The JSON body of the request is provided in the event parameter.
@@ -186,11 +209,8 @@ def lambda_handler(event, context):
     print("event.session.application.applicationId=" +
           event['session']['application']['applicationId'])
 
-    """
-    Uncomment this if statement and populate with your skill's application ID to
-    prevent someone else from configuring a skill that sends requests to this
-    function.
-    """
+    # Configure your trigger so that you don't need this:
+    
     # if (event['session']['application']['applicationId'] !=
     #         "amzn1.echo-sdk-ams.app.[unique-value-here]"):
     #     raise ValueError("Invalid Application ID")
