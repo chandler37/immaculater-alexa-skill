@@ -16,7 +16,7 @@ http://amzn.to/1LGWsLG
 from __future__ import print_function
 
 
-import requests
+from botocore.vendored import requests
 
 
 def build_speechlet_response(title, output, reprompt_text, should_end_session):
@@ -121,6 +121,7 @@ def cmd_do_intent(intent, session, do_or_maybe):
     else:
         speech_output = "I'm not sure what you want me to remember."
         reprompt_text = "I'm not sure what you want me to remember. TOOD(chandler37): Do we need this?"
+    print('Capturing ' + thought)
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
 
@@ -209,7 +210,7 @@ def lambda_handler(event, context):
     print("event.session.application.applicationId=" +
           event['session']['application']['applicationId'])
 
-    # Configure your trigger so that you don't need this:
+    # Configure your trigger to filter by Skill ID so that you don't need this:
     
     # if (event['session']['application']['applicationId'] !=
     #         "amzn1.echo-sdk-ams.app.[unique-value-here]"):
