@@ -126,14 +126,14 @@ def cmd_do_intent(intent, session, do_or_maybe):
         card_title, speech_output, reprompt_text, should_end_session))
 
 
-def cmd_todo_intent(intent, session, do_or_maybe):
+def cmd_todo_intent(intent, session):
     """Immaculater's CLI's "todo" command for listing incomplete, active to-dos."""
 
     card_title = "What's on the list"
     session_attributes = {}
     should_end_session = True
 
-    speech_output = "We are so not there yet."
+    speech_output = "We are sooooo not there yet."
     reprompt_text = "TOOD(chandler37): Do we need this one?"
 
     return build_response(session_attributes, build_speechlet_response(
